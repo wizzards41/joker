@@ -1,432 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Totally Normal Website</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IM PRETTY</title>
 
-    :root {
-      --bg: #f0f4ff;
-      --text: #1a1a2e;
-      --accent: #4f46e5;
-      --red: #ef4444;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+<style>
     body {
-      font-family: 'Comic Neue', cursive;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      user-select: none;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: pink;
+        overflow: hidden;
+        height: 100vh;
+        margin: 0;
     }
 
     h1 {
-      font-size: clamp(2rem, 6vw, 4rem);
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      text-align: center;
-      transition: transform 0.1s;
-    }
-
-    p.subtitle {
-      font-size: 1.2rem;
-      color: #555;
-      margin-bottom: 2.5rem;
-      text-align: center;
+        margin-top: 100px;
+        font-size: 50px;
+        color: white;
     }
 
     .btn {
-      padding: 1rem 2.5rem;
-      font-size: 1.1rem;
-      font-family: inherit;
-      font-weight: 700;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform 0.15s, background 0.2s;
-      position: relative;
-      display: block;
+        padding: 15px 35px;
+        font-size: 24px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        position: absolute;
     }
 
-    .btn:hover {
-      background: var(--red);
+    #yesBtn {
+        background: limegreen;
+        color: white;
+        left: 55%;
+        top: 50%;
     }
 
-    #toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(6rem);
-      background: #1a1a2e;
-      color: #fff;
-      padding: 0.75rem 1.8rem;
-      border-radius: 999px;
-      font-size: 1rem;
-      font-weight: 700;
-      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
-      z-index: 9999;
-      white-space: nowrap;
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
-
-    #progress-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 1000;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    #progress-overlay.show { display: flex; }
-    #progress-label {
-      color: #fff;
-      font-size: 1.4rem;
-      font-weight: 700;
-    }
-    #progress-bar-wrap {
-      width: min(400px, 80vw);
-      background: #333;
-      border-radius: 999px;
-      height: 1.5rem;
-      overflow: hidden;
-    }
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #4f46e5, #ec4899);
-      border-radius: 999px;
-      transition: width 0.05s linear;
-    }
-    #progress-sub {
-      color: #aaa;
-      font-size: 0.9rem;
+    #noBtn {
+        background: red;
+        color: white;
+        left: 40%;
+        top: 50%;
     }
 
-    #cursor-follower {
-      position: fixed;
-      pointer-events: none;
-      font-size: 1.5rem;
-      z-index: 9998;
-      transition: left 0.05s, top 0.05s;
+    #message {
+        margin-top: 250px;
+        font-size: 40px;
+        font-weight: bold;
     }
-
-    #alarm-banner {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: var(--red);
-      color: #fff;
-      text-align: center;
-      padding: 0.7rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      z-index: 9997;
-      animation: flash 0.5s infinite alternate;
-    }
-    #alarm-banner.show { display: block; }
-    @keyframes flash { from { opacity: 1; } to { opacity: 0.4; } }
-
-    #confetti-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    .troll-box {
-      background: #fff;
-      border-radius: 1.5rem;
-      padding: 2.5rem 3rem;
-      box-shadow: 0 8px 40px rgba(79,70,229,0.12);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      max-width: 480px;
-      width: 90vw;
-      position: relative;
-      z-index: 10;
-    }
-
-    #close-x {
-      position: absolute;
-      top: 1rem; right: 1.2rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #aaa;
-    }
-
-    #step-label {
-      font-size: 0.85rem;
-      color: #aaa;
-      margin-top: -0.5rem;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-<canvas id="confetti-canvas"></canvas>
-<div id="alarm-banner">⚠️ VIRUS DETECTED ON YOUR COMPUTER — DO NOT TURN OFF ⚠️</div>
-<div id="cursor-follower">👆</div>
+<h1>IM PRETTY 💖</h1>
 
-<div class="troll-box">
-  <span id="close-x" title="Close">✕</span>
-  <h1 id="main-title">Totally Normal Website</h1>
-  <p class="subtitle" id="subtitle">Nothing suspicious here. Just click the button.</p>
-  <span id="step-label">Step 1 of 1</span>
-  <button class="btn" id="main-btn" onclick="handleClick()">Click Me!</button>
-</div>
+<button id="yesBtn" class="btn">YES</button>
+<button id="noBtn" class="btn">NO</button>
 
-<div id="toast"></div>
-
-<div id="progress-overlay">
-  <div id="progress-label">Downloading important files...</div>
-  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
-  <div id="progress-sub">Please wait, this will only take a moment.</div>
-</div>
+<div id="message"></div>
 
 <script>
-  // --- Cursor follower ---
-  const follower = document.getElementById('cursor-follower');
-  document.addEventListener('mousemove', e => {
-    follower.style.left = (e.clientX + 12) + 'px';
-    follower.style.top  = (e.clientY + 10) + 'px';
-  });
+const yesBtn = document.getElementById("yesBtn");
 
-  // --- Troll state machine ---
-  const steps = [
-    {
-      title: "Totally Normal Website",
-      subtitle: "Nothing suspicious here. Just click the button.",
-      btn: "Click Me!",
-      action: () => showToast("👍 Nice click! Try again..."),
-    },
-    {
-      title: "One more time!",
-      subtitle: "That felt good, right? Do it again.",
-      btn: "Click Again",
-      action: () => showToast("You're doing great! Keep going 😈"),
-    },
-    {
-      title: "Almost there...",
-      subtitle: "Just one more click and you'll win a prize!",
-      btn: "CLAIM PRIZE",
-      action: fakeDownload,
-    },
-    {
-      title: "Congratulations!! 🎉",
-      subtitle: "You've been selected for a special reward!",
-      btn: "Collect Reward",
-      action: startAlarm,
-    },
-    {
-      title: "Your reward is ready!",
-      subtitle: "Please do not close this tab.",
-      btn: "Open Reward",
-      action: wobblePage,
-    },
-    {
-      title: "404 - Prize Not Found",
-      subtitle: "Oops! The prize ran away. Maybe try refreshing?",
-      btn: "Refresh Page",
-      action: () => { window.location.reload(); },
-    },
-  ];
+function moveButton() {
+    const maxX = window.innerWidth - yesBtn.offsetWidth;
+    const maxY = window.innerHeight - yesBtn.offsetHeight;
 
-  let step = 0;
-  const btn = document.getElementById('main-btn');
-  const title = document.getElementById('main-title');
-  const subtitle = document.getElementById('subtitle');
-  const stepLabel = document.getElementById('step-label');
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
 
-  function handleClick() {
-    steps[step].action();
-    step = (step + 1) % steps.length;
-    setTimeout(() => {
-      const s = steps[step];
-      title.textContent = s.title;
-      subtitle.textContent = s.subtitle;
-      btn.textContent = s.btn;
-      stepLabel.textContent = `Step ${step + 1} of ${steps.length}`;
-    }, 400);
-  }
+    yesBtn.style.left = randomX + "px";
+    yesBtn.style.top = randomY + "px";
+}
 
-  // --- Close X does nothing ---
-  document.getElementById('close-x').addEventListener('click', () => {
-    showToast("😂 Nice try. You can't close this.");
-  });
+// Desktop mouse
+yesBtn.addEventListener("mouseover", moveButton);
 
-  // --- Toast ---
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
+// Mobile touch
+yesBtn.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    moveButton();
+});
 
-  // --- Fake Download ---
-  function fakeDownload() {
-    const overlay = document.getElementById('progress-overlay');
-    const bar = document.getElementById('progress-bar');
-    const label = document.getElementById('progress-label');
-    const sub = document.getElementById('progress-sub');
-    overlay.classList.add('show');
-    bar.style.width = '0%';
-
-    const fakeFiles = [
-      "Downloading virus_remover.exe...",
-      "Downloading free_robux_generator.zip...",
-      "Downloading totally_legit_prize.pdf...",
-      "Downloading your_browsing_history.txt...",
-      "Downloading cat_pictures_9000.tar.gz...",
-    ];
-    let pct = 0;
-    let fileIdx = 0;
-    label.textContent = fakeFiles[0];
-
-    const iv = setInterval(() => {
-      pct += Math.random() * 3;
-      if (pct > 100) pct = 100;
-      bar.style.width = pct + '%';
-      sub.textContent = Math.floor(pct) + '% complete';
-
-      if (pct > (fileIdx + 1) * 20 && fileIdx < fakeFiles.length - 1) {
-        fileIdx++;
-        label.textContent = fakeFiles[fileIdx];
-      }
-
-      if (pct >= 100) {
-        clearInterval(iv);
-        setTimeout(() => {
-          overlay.classList.remove('show');
-          showToast("✅ Download complete! (just kidding lol)");
-          launchConfetti();
-        }, 800);
-      }
-    }, 80);
-  }
-
-  // --- Alarm ---
-  function startAlarm() {
-    const banner = document.getElementById('alarm-banner');
-    banner.classList.add('show');
-    setTimeout(() => {
-      banner.classList.remove('show');
-      showToast("😂 Relax, your computer is fine.");
-    }, 4000);
-  }
-
-  // --- Wobble page ---
-  function wobblePage() {
-    document.body.style.transition = 'transform 0.1s';
-    let t = 0;
-    const wobble = setInterval(() => {
-      t += 0.4;
-      document.body.style.transform = `rotate(${Math.sin(t) * 3}deg)`;
-      if (t > 12) {
-        clearInterval(wobble);
-        document.body.style.transform = '';
-        showToast("Whoa, hold on there! 🌀");
-      }
-    }, 50);
-  }
-
-  // --- Confetti ---
-  function launchConfetti() {
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const pieces = Array.from({length: 120}, () => ({
-      x: Math.random() * canvas.width,
-      y: -20,
-      r: Math.random() * 8 + 4,
-      color: `hsl(${Math.random()*360},80%,60%)`,
-      vy: Math.random() * 4 + 2,
-      vx: (Math.random() - 0.5) * 3,
-      spin: (Math.random() - 0.5) * 0.3,
-      angle: 0,
-    }));
-
-    let frame;
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      pieces.forEach(p => {
-        p.y += p.vy;
-        p.x += p.vx;
-        p.angle += p.spin;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.angle);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r);
-        ctx.restore();
-      });
-      if (pieces.some(p => p.y < canvas.height)) {
-        frame = requestAnimationFrame(draw);
-      } else {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-      }
-    }
-    frame = requestAnimationFrame(draw);
-    setTimeout(() => { cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
-  }
-
-  // --- Title drifts away from cursor ---
-  const mainTitle = document.getElementById('main-title');
-  document.addEventListener('mousemove', e => {
-    const rect = mainTitle.getBoundingClientRect();
-    const cx = rect.left + rect.width/2;
-    const cy = rect.top + rect.height/2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 150) {
-      const push = (150 - dist) / 150 * 20;
-      mainTitle.style.transform = `translate(${-dx/dist*push}px, ${-dy/dist*push}px)`;
-    } else {
-      mainTitle.style.transform = '';
-    }
-  });
-
-  // --- Tab title troll ---
-  const trollTitles = [
-    "Totally Normal Website",
-    "👀 I can see you",
-    "Don't look behind you",
-    "Your WiFi is being sold",
-    "Totally Normal Website",
-    "CLICK THE BUTTON!!!",
-    "Why are you still here?",
-  ];
-  let ti = 0;
-  setInterval(() => {
-    ti = (ti + 1) % trollTitles.length;
-    document.title = trollTitles[ti];
-  }, 2500);
-
-  // --- Random shakes on idle ---
-  setInterval(() => {
-    if (Math.random() < 0.3) {
-      btn.style.transform = `translateX(${(Math.random()-0.5)*10}px)`;
-      setTimeout(() => btn.style.transform = '', 150);
-    }
-  }, 1800);
+document.getElementById("noBtn").addEventListener("click", function() {
+    document.getElementById("message").innerHTML =
+        "HAHA 🤪🤣😜";
+});
 </script>
+
 </body>
 </html>
